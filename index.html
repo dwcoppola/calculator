@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="machine">
+<div id="screen"></div>
+<div id="calculator">
+  <div class="column">
+    <button onclick="deleteLeft()">&#x232b;</button>
+    <button onclick="displayValues('7')">7</button>
+    <button onclick="displayValues('4')">4</button>
+    <button onclick="displayValues('1')">1</button>
+    <button onclick="displayValues('0')">0</button>
+  </div>
+  <div class="column">
+    <button onclick="clearAll()">C</button>
+    <button onclick="displayValues('8')">8</button>
+    <button onclick="displayValues('5')">5</button>
+    <button onclick="displayValues('2')">2</button>
+    <button onclick="checkDecimal('.')">.</button>
+  </div>
+  <div class="column">
+    <button onclick="percentage()">%</button>
+    <button onclick="displayValues('9')">9</button>
+    <button onclick="displayValues('6')">6</button>
+    <button onclick="displayValues('3')">3</button>
+    <button onclick="storeValue('=')">=</button>
+  </div>
+  <div class="column">
+    <button onclick="storeValue('/')">&divide</button>
+    <button onclick="storeValue('*')">&times</button>
+    <button onclick="storeValue('-')">-</button>
+    <button onclick="storeValue('+')" style="height: 100px;">+</button>
+  </div>
+</div>
+</div>
+<script src="script.js">
+</script>
+</body>
+</html>
