@@ -1,128 +1,203 @@
-const screen = document.getElementById('screen');
-operatorList = ['-','+','/','*'];
-var temp = '';
-var x = '';
-var y = '';
-var o = '';
-var tempOp = '';
-var c = 0;
-storeValue = (temp) => {
-  if (x === '' && y === '' && temp === '=') {
-    screen.textContent = '';
-  } else if (x === '' && y === '') {
-    if (screen.textContent === '') {
-      screen.textContent = '0';
-    };
-    x = screen.textContent;
-    tempOp = temp;
-    c = 1;
-  } else if (x !== '' && y === '' && temp !== '=') {
-    if (c === 1 && temp !== '=') { 
-      tempOp = temp;      
-      c = 1;
-    } else { 
-    y = screen.textContent;
-    o = tempOp;
-    tempOp = temp;
-    x = operate(x,o,y);
-    y = '';
-    c = 1;
-    checkLength();
-    screen.textContent = x;
-    };
-  } else if (x !== '' && y === '' && temp === '=') {
-    y = screen.textContent;
-    o = tempOp;
-    tempOp = temp;
-    x = operate(x,o,y);
-    c = 1;
-    checkLength();
-    screen.textContent = x;
-  } else if (x !== '' && y !== '' && temp !== '=') {
-    y = '';
-    x = screen.textContent;
-    o = tempOp;
-    tempOp = temp;
-    c = 1;
-  } else if (x !== '' && y !== '' && temp === '=') {
-    x = operate(x,o,y);
-    checkLength();
-    screen.textContent = x;
-  };
-};
-checkLength = () => {
-  if (x.toString().length > 11) {
-    x = x.toString().substring(0,11);
-  };
-};
-displayValues = (temp) => {
-  if (c === 1) {
-    screen.textContent = '';
-    c = 0;
-  };
-  if (screen.textContent.length < 10 || 
-     (screen.textContent.length < 11 && screen.textContent.includes('.') === true)) {
-    screen.textContent = screen.textContent + temp;
-  };
-};
-checkDecimal = (temp) => {
-  if (screen.textContent.includes('.') === false) {
-    displayValues(temp);
-  };
-  if (c === 1 && screen.textContent.includes('.') === true) {
-    displayValues(temp);
-  };
-};
-operate = (x,o,y) => {
-  if (o === '-') {
-    if ((Number(x) - Number(y)) < 9999999999.0) {
-      return ((Number(x) * 10) - (Number(y) * 10)) / 10;
-    } else {
-      return 'OVERLOAD';
-    };
-  };
-  if (o === '+') {
-    if ((Number(x) + Number(y)) < 9999999999.0) {
-      return ((Number(x) * 10) + (Number(y) * 10)) / 10;
-    } else {
-      return 'OVERLOAD';
-    };
-  };
-  if (o === '*') {
-    if ((Number(x) * Number(y)) < 9999999999.0) {
-      return (Number(x) * 10) * (Number(y) * 10) / 100;
-    } else {
-      return 'OVERLOAD';
-    };
-  };
-  if (o === '/' && Number(y) !== 0) {
-    if ((Number(x) / Number(y)) < 9999999999.0) {
-      return Number(x) / Number(y);
-    } else {
-      return 'OVERLOAD';
-    };
-  };
-};
-percentage = () => {
-p = Number(screen.textContent) / 100;
-  if (p.toString().length > 11) {
-    p = p.toString().substring(0,11);
-  };
-  screen.textContent = p;
-  x = '';
-  y = '';
-  o = '';
-  c = 1;
-};
-deleteLeft = () => {
-  screen.textContent = screen.textContent.substring(0,screen.textContent.length-1);
-};
-clearAll = () => {
-  screen.textContent = '';
-  temp = '';	
-  x = '';
-  y = '';
-  o = '';
-  c = 0;
-  tempOp = '';
-};
+/*
+
+    x and y: used for first and second values respectively
+    temp: used to hold temporary values
+    o: used for the operator
+    c: a boolean flag
+
+*/
+
+class Calculator {
+    constructor() {
+        this.screen = document.getElementById('screen');
+        this.operatorList = ['-', '+', '/', '*'];
+        this.x = '';
+        this.y = '';
+        this.o = '';
+        this.c = false;
+        this.temp = '';
+    }
+
+    storeValue = (operator) => {
+        if (this.x === '' && this.y === '' && operator === '=') {
+
+            this.screen.textContent = '';
+
+        } else if (this.x === '' && this.y === '') {
+
+            if (this.screen.textContent === '') {
+                this.screen.textContent = '0';
+            }
+            this.x = this.screen.textContent;
+            this.temp = operator;
+            this.c = true;
+
+        } else if (this.x !== '' && this.y === '' && operator !== '=') {
+
+            if (this.c === true && operator !== '=') { 
+                this.temp = operator;      
+            } else { 
+                this.y = this.screen.textContent;
+                this.o = this.temp;
+                this.temp = operator;
+                this.x = this.operate(this.x, this.o, this.y);
+                this.y = '';
+                this.checkLength();
+                this.c = true;
+                this.screen.textContent = this.x;
+            }
+
+        } else if (this.x !== '' && this.y === '' && operator === '=') {
+
+            this.y = this.screen.textContent;
+            this.o = this.temp;
+            this.temp = operator;
+            this.x = this.operate(this.x, this.o, this.y);
+            this.c = true;
+            this.checkLength();
+            this.screen.textContent = this.x;
+
+        } else if (this.x !== '' && this.y !== '' && operator !== '=') {
+
+            this.y = '';
+            this.x = this.screen.textContent;
+            this.o = this.temp;
+            this.temp = operator;
+            this.c = true;
+
+        } else if (this.x !== '' && this.y !== '' && operator === '=') {
+
+            this.x = this.operate(this.x, this.o, this.y);
+            this.checkLength();
+            this.screen.textContent = this.x;
+
+        }
+    }
+
+    checkLength = () => {
+        if (this.x.toString().length > 11) {
+            this.x = this.x.toString().substring(0,11);
+        }
+    }
+
+    displayValues = (temporaryValue) => {
+        if (this.c === true) {
+            this.screen.textContent = '';
+            this.c = false;
+        }
+        if (this.screen.textContent.length < 10 || 
+            (this.screen.textContent.length < 11 && this.screen.textContent.includes('.') === true)) {
+            this.screen.textContent = this.screen.textContent + temporaryValue;
+        }
+    }
+
+    checkDecimal = (temporaryValue) => {
+        if (this.screen.textContent.includes('.') === false) {
+            this.displayValues(temporaryValue);
+        }
+        if (this.c === true && screen.textContent.includes('.') === true) {
+            this.displayValues(temporaryValue);
+        }
+    }
+
+    operate = (value1, operator, value2) => {
+        if (operator === '-') {
+            if ((Number(value1) - Number(value2)) < 9999999999.0) {
+                return ((Number(value1) * 10) - (Number(value2) * 10)) / 10;
+            } else {
+                return 'OVERLOAD';
+            }
+        }
+
+        if (operator === '+') {
+            if ((Number(value1) + Number(value2)) < 9999999999.0) {
+                return ((Number(value1) * 10) + (Number(value2) * 10)) / 10;
+            } else {
+                return 'OVERLOAD';
+            }
+        }
+
+        if (operator === '*') {
+            if ((Number(value1) * Number(value2)) < 9999999999.0) {
+                return (Number(value1) * 10) * (Number(value2) * 10) / 100;
+            } else {
+                return 'OVERLOAD';
+            }
+        }
+
+        if (operator === '/' && Number(value2) !== 0) {
+            if ((Number(value1) / Number(value2)) < 9999999999.0) {
+                return Number(value1) / Number(value2);
+            } else {
+                return 'OVERLOAD';
+            }
+        }
+    }
+
+    percentage = () => {
+        let percent = Number(this.screen.textContent) / 100;
+        if (percent.toString().length > 11) {
+            percent = percent.toString().substring(0, 11);
+        }
+        this.screen.textContent = percent;
+        this.x = '';
+        this.y = '';
+        this.o = '';
+        this.c = true;
+    }
+
+    deleteLeft = () => {
+        this.screen.textContent = this.screen.textContent.substring(0, this.screen.textContent.length - 1);
+    }
+
+    clearAll = () => {
+        this.screen.textContent = '';
+        this.x = '';
+        this.y = '';
+        this.o = '';
+        this.c = false;
+        this.temp = '';
+    }
+
+}
+
+// DOM
+
+function buildMachine() {
+    const machine = document.getElementById('machine');
+    machine.innerHTML = `
+    <div id="screen">
+    </div>
+    <div id="calculator">
+    <div class="column">
+        <button onclick="calculator.deleteLeft()">&#x232b;</button>
+        <button onclick="calculator.displayValues('7')">7</button>
+        <button onclick="calculator.displayValues('4')">4</button>
+        <button onclick="calculator.displayValues('1')">1</button>
+        <button onclick="calculator.displayValues('0')">0</button>
+    </div>
+    <div class="column">
+        <button onclick="calculator.clearAll()">C</button>
+        <button onclick="calculator.displayValues('8')">8</button>
+        <button onclick="calculator.displayValues('5')">5</button>
+        <button onclick="calculator.displayValues('2')">2</button>
+        <button onclick="calculator.checkDecimal('.')">.</button>
+    </div>
+    <div class="column">
+        <button onclick="calculator.percentage()">%</button>
+        <button onclick="calculator.displayValues('9')">9</button>
+        <button onclick="calculator.displayValues('6')">6</button>
+        <button onclick="calculator.displayValues('3')">3</button>
+        <button onclick="calculator.storeValue('=')">=</button>
+    </div>
+    <div class="column">
+        <button onclick="calculator.storeValue('/')">&divide</button>
+        <button onclick="calculator.storeValue('*')">&times</button>
+        <button onclick="calculator.storeValue('-')">-</button>
+        <button onclick="calculator.storeValue('+')" style="height: 100px;">+</button>
+        </div>
+    </div>`
+}
+
+buildMachine();
+const calculator = new Calculator();
